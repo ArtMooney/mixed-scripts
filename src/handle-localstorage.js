@@ -1,32 +1,31 @@
-// functions
-setWithExpiry = (key, value, ttl) => {
+function setLocalStorage(key, value, ttl) {
   const now = new Date();
   const item = {
     value: value,
     expiry: now.getTime() + ttl,
   };
   localStorage.setItem(key, JSON.stringify(item));
-};
+}
 
-getWithExpiry = (key) => {
+function getLocalStorage(key) {
   const itemStr = localStorage.getItem(key);
 
-  if (!itemStr) return null;
+  if (!itemStr) {
+    return null;
+  }
 
   const item = JSON.parse(itemStr);
   const now = new Date();
 
   if (now.getTime() > item.expiry) {
-    // If the item is expired, delete the item from storage and return null
     localStorage.removeItem(key);
     return null;
   }
-
   return item.value;
-};
+}
 
 // localstorage name, value, expiry after milliseconds
-setWithExpiry("localstorage-name", true, 5000);
+setLocalStorage("localstorage-name", "this is the saved data", 1000 * 60 * 15);
 
 // localstorage name
-const value = getWithExpiry("localstorage-name");
+const value = getLocalStorage("localstorage-name");
